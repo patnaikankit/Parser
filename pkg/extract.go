@@ -1,6 +1,6 @@
 // extracting the plain text from pdf
 
-package services
+package pkg
 
 import "github.com/ledongthuc/pdf"
 

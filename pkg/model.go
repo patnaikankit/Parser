@@ -1,4 +1,4 @@
-package services
+package pkg
 
 type Section struct {
 	Header string
