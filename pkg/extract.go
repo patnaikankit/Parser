@@ -2,31 +2,43 @@
 
 package pkg
 
-import "github.com/ledongthuc/pdf"
+import (
+	"strings"
 
-func ExtractText(path string) (string, error) {
-	pdfFileStream, pdf, err := pdf.Open(path)
+	"github.com/ledongthuc/pdf"
+)
 
+// extracts text from the PDF and return it as a slice of paragraphs
+func ExtractText(path string) ([]string, error) {
+	pdfFileStream, pdfDoc, err := pdf.Open(path)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
-
 	defer pdfFileStream.Close()
 
-	var text string
-	for i := 1; i <= pdf.NumPage(); i++ {
-		currentPage := pdf.Page(i)
+	var paragraphs []string
 
+	for i := 1; i <= pdfDoc.NumPage(); i++ {
+		currentPage := pdfDoc.Page(i)
 		if currentPage.V.IsNull() {
 			continue
 		}
 
 		pageText, err := currentPage.GetPlainText(nil)
 		if err != nil {
-			return " ", err
+			return nil, err
 		}
 
-		text += pageText
+		// Split the text by newlines to preserve paragraph structure
+		pageParagraphs := strings.Split(pageText, "\n\n")
+
+		for _, para := range pageParagraphs {
+			trimmedPara := strings.TrimSpace(para)
+			if len(trimmedPara) > 0 {
+				paragraphs = append(paragraphs, trimmedPara)
+			}
+		}
 	}
-	return text, nil
+
+	return paragraphs, nil
 }

@@ -10,7 +10,7 @@ import (
 
 func main() {
 	if len(os.Args) < 2 {
-		fmt.Println("Please provide a pdf file path as an arguement")
+		fmt.Println("Please provide a pdf file path as an argument")
 		os.Exit(1)
 	}
 
@@ -22,12 +22,17 @@ func main() {
 		os.Exit(1)
 	}
 
-	text, err := pkg.ExtractText(absPath)
+	paragraphs, err := pkg.ExtractText(absPath)
 	if err != nil {
 		fmt.Printf("Error Extracting Text: %v\n", err)
 		os.Exit(1)
 	}
 
-	parsedDoc := pkg.ParseText(text)
-	pkg.RenderParsedText(parsedDoc, "output.txt")
+	err = pkg.RenderParsedTextToFile(paragraphs, "output.txt")
+	if err != nil {
+		fmt.Printf("Error Rendering Text: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Println("Text extracted and written to output.txt")
 }
