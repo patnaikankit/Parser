@@ -24,10 +24,10 @@ func main() {
 
 	text, err := pkg.ExtractText(absPath)
 	if err != nil {
-		fmt.Println("Error Extracting Text")
+		fmt.Printf("Error Extracting Text: %v\n", err)
 		os.Exit(1)
 	}
 
 	parsedDoc := pkg.ParseText(text)
-	pkg.RenderParsedText(parsedDoc)
+	pkg.RenderParsedText(parsedDoc, "output.txt")
 }
